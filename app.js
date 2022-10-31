@@ -15,6 +15,7 @@ mongoDb.connectToServer(function (err) {
   // Set routers
   var indexRouter = require('./routes/index');
   var challengeRouter = require('./routes/challenge')
+  var constantRouter = require('./routes/constants')
 
   // view engine setup
   app.set('views', path.join(__dirname, 'views'));
@@ -36,6 +37,7 @@ mongoDb.connectToServer(function (err) {
   // use routes
   app.use('/', indexRouter);
   app.use('/challenge', challengeRouter);
+  app.use('/constants', constantRouter);
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {
