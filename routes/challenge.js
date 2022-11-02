@@ -1,11 +1,21 @@
 var express = require('express');
 var router = express.Router();
 
-function createChallenge(name){
-  let challenge = {
-      "name" : name
+function createChallengeObj(name, description, tags, challenge, goals){
+
+  let challengeObj = {
+      "name" : name,
+      "description" : description,
+      "tags": tags,
+      "challenge": challenge,
+      "goals": goals
   }
-  return challenge
+  return challengeObj
+}
+
+function parseTags(tags){
+    const newTags = tags.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '').toLowerCase();
+    return newTags.trim().split(" ");
 }
 
 // mongo
@@ -17,8 +27,13 @@ require('dotenv').config()
 /* POST Challenge listing. */
 router.post('/', function(req, res) {
   // Mongo Object ID
+  console.log(req.body);
   var name = req.body.name;
-  if (name) {
+  var description = req.body.description;
+  var challenge = req.body.challenge;
+  var tags = req.body.tags;
+  var goals = req.body.goals;
+  if (name && description && tags && challenge && goals) {
       db.collection(challenges).findOne({"name": name}, (err, results) => {
           if (err) { return console.log(err) }
           console.log(results);
@@ -26,7 +41,7 @@ router.post('/', function(req, res) {
           if (results !== null) { return res.send(null) }
 
           // register challenge
-          db.collection(challenges).insertOne(createChallenge(name), (err, results) => {
+          db.collection(challenges).insertOne(createChallengeObj(name, description, parseTags(tags), challenge, goals), (err, results) => {
               if (err) { return console.log(err) }
               console.log(results);
               res.send({ identification: { identification: results["insertedId"] } });
