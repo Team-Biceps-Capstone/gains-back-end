@@ -9,24 +9,41 @@ const validator = require('validator')
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
+  name: {
+    type: String,
+    required: [true, 'Please add a name']
+  },
   email: {
     type: String,
-    required: true,
+    required: [true, 'Please add an email'],
     unique: true
   },
   password: {
     type: String,
-    required: true
+    required: [true, 'Please add a password']
   },
+  city: {
+    type: String,
+    required: [true, 'Please add a city']
+  },
+  state: {
+    type: String,
+    required: [true, 'Please add a state']
+  },
+  zip: {
+    type: String,
+    required: [true, 'Please add a zipcode']
+  },
+
  
 })
 
 // static signup method
 // We use regular function so we can refrence the model'this'
-userSchema.statics.signup = async function(email, password) {
+userSchema.statics.signup = async function(name, email, password, city, state, zip) {
 
   // validation: email or password filled
-  if (!email || !password ){
+  if (!name || !email || !password || !city || !state || !zip){
     throw Error('All fields must be filled')
   }
 
@@ -49,10 +66,11 @@ userSchema.statics.signup = async function(email, password) {
 
   const salt = await bcrypt.genSalt(10)
   const hash = await bcrypt.hash(password, salt)
-  const user = await this.create({ email, password: hash })
+  const user = await this.create({name, email, password: hash, city, state, zip })
 
   return user
 }
+
 
 
 // static login method

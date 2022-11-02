@@ -3,21 +3,20 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const mongoose = require('mongoose')
+
 
 var app = express();
 
 require('dotenv').config();
 
-
-
+// ***Causes error on my end - AM***
+//const mongoDb = require('./mongoDb')
+//mongoDb.connectToServer(function (err) {
   // Set routers
   var indexRouter = require('./routes/index');
   var challengeRouter = require('./routes/challenge')
   var userRouter = require('./routes/user')
   
-  
-
   // view engine setup
   app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'jade');
@@ -55,18 +54,8 @@ require('dotenv').config();
     res.status(err.status || 500);
     res.render('error');
   });
+//});
 
-// connect to db //Adrian's mongodb
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    // listen for requests
-    app.listen(process.env.PORT2, () => {
-      console.log('connected to db & listening on port', process.env.PORT2)
-    })
-  })
-  .catch((error) => {
-    console.log(error)
-  })
 
 
 module.exports = app;

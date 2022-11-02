@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
+
 /**
  * Module dependencies.
  */
+ const mongoose = require('mongoose')
 
  var app = require('../app');
  var debug = require('debug')('gains-back-end:server');
@@ -11,8 +13,7 @@
  /**
   * Get port from environment and store in Express.
   */
- 
- var port = normalizePort(process.env.PORT || '3000');
+ var port = normalizePort(process.env.PORT || '4000');
  app.set('port', port);
  
  /**
@@ -24,10 +25,25 @@
  /**
   * Listen on provided port, on all network interfaces.
   */
+ /*  ***Moved in Mongose below -AM ***
+   server.listen(port);
+   server.on('listening', onListening);
+   server.on('error', onError);
+ */
  
- server.listen(port);
- server.on('error', onError);
- server.on('listening', onListening);
+
+ // connect to db //Adrian's mongoose implemenation
+ mongoose.connect(process.env.MONGO_URI)
+ .then(() => {
+   // listen for requests
+   server.listen(port);
+   server.on('listening', onListening);
+   console.log('connected to db & listening on port', process.env.PORT)
+   })
+ .catch(() => {
+    server.on('error', onError);
+ })
+
  
  /**
   * Normalize a port into a number, string, or false.
@@ -88,3 +104,4 @@
      : 'port ' + addr.port;
    debug('Listening on ' + bind);
  }
+
