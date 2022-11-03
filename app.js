@@ -4,19 +4,19 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+
 var app = express();
 
 require('dotenv').config();
 
-
-//Mongo Connection credentials
-const mongoDb = require('./mongoDb');
-mongoDb.connectToServer(function (err) {
+// ***Causes error on my end - AM***
+//const mongoDb = require('./mongoDb')
+//mongoDb.connectToServer(function (err) {
   // Set routers
   var indexRouter = require('./routes/index');
   var challengeRouter = require('./routes/challenge')
-  var constantRouter = require('./routes/constants')
-
+  var userRouter = require('./routes/user')
+  
   // view engine setup
   app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'jade');
@@ -37,7 +37,7 @@ mongoDb.connectToServer(function (err) {
   // use routes
   app.use('/', indexRouter);
   app.use('/challenge', challengeRouter);
-  app.use('/constants', constantRouter);
+  app.use('/api/user', userRouter)
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {
@@ -54,5 +54,8 @@ mongoDb.connectToServer(function (err) {
     res.status(err.status || 500);
     res.render('error');
   });
-})
+//});
+
+
+
 module.exports = app;
