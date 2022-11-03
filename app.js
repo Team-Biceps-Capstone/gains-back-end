@@ -14,8 +14,9 @@ require('dotenv').config();
 //mongoDb.connectToServer(function (err) {
   // Set routers
   var indexRouter = require('./routes/index');
-  var challengeRouter = require('./routes/challenge')
-  var userRouter = require('./routes/user')
+  var challengeRouter = require('./routes/challenge');
+  var userRouter = require('./routes/user');
+  var constantRouter = require('./routes/constant');
   
   // view engine setup
   app.set('views', path.join(__dirname, 'views'));
@@ -37,7 +38,8 @@ require('dotenv').config();
   // use routes
   app.use('/', indexRouter);
   app.use('/challenge', challengeRouter);
-  app.use('/api/user', userRouter)
+  app.use('/api/user', userRouter);
+  app.use('/constant', constantRouter);
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {
