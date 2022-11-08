@@ -55,7 +55,6 @@ userSchema.statics.signup = async function(name, email, password, city, state, z
   // validation: check if password strong enough
   if (!validator.isStrongPassword(password)){
     throw Error('Password not strong enough')
-
   }
 
   // validation: email already exist check
