@@ -1,4 +1,6 @@
+const { mongo } = require('mongoose');
 const Challenge = require('../models/challengeModel')
+
 
 const createChallenge = async (req, res) => {
     const {name, description, tags, challenge, goals} = req.body;

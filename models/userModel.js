@@ -32,15 +32,34 @@ const userSchema = new Schema({
   },
   zip: {
     type: String,
-    required: [true, 'Please add a zipcode']
+    required: [true, 'Please add a ']
   },
-
- 
+  favorites: {
+    type: Array,
+    default: []
+  },
+  inProgress: {
+    type: Array,
+    default: []
+  },
+  completed: {
+    type: Array,
+    default: []
+  },
+  badges: {
+    type: Array,
+    default: []
+  } 
 })
+
+
+
 
 // static signup method
 // We use regular function so we can refrence the model'this'
-userSchema.statics.signup = async function(name, email, password, city, state, zip) {
+userSchema.statics.signup = async function(name, email, password, city, state, zip, favorites, inProgress, completed, badges) {
+ 
+
 
   // validation: email or password filled
   if (!name || !email || !password || !city || !state || !zip){
@@ -65,7 +84,7 @@ userSchema.statics.signup = async function(name, email, password, city, state, z
 
   const salt = await bcrypt.genSalt(10)
   const hash = await bcrypt.hash(password, salt)
-  const user = await this.create({name, email, password: hash, city, state, zip })
+  const user = await this.create({name, email, password: hash, city, state, zip, favorites, inProgress, completed, badges})
 
   return user
 }
@@ -98,6 +117,16 @@ userSchema.statics.login = async function(email, password) {
 
   return user
 }
+
+
+
+
+userSchema.statics.viewChallenges = async function(userID){
+  const all = await this.find(userID);
+  const inProgressArray = all[0].inProgress
+  return inProgressArray;
+}
+
 
 
 module.exports = mongoose.model('User', userSchema)
