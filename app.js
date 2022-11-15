@@ -1,63 +1,61 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-
+var createError = require("http-errors");
+var express = require("express");
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
 
 var app = express();
 
-require('dotenv').config();
+require("dotenv").config();
 
-// ***Causes error on my end - AM***
-//const mongoDb = require('./mongoDb')
-//mongoDb.connectToServer(function (err) {
-  // Set routers
-  var indexRouter = require('./routes/index');
-  var challengeRouter = require('./routes/challenge');
-  var userRouter = require('./routes/user');
-  var constantRouter = require('./routes/constant');
-  
-  // view engine setup
-  app.set('views', path.join(__dirname, 'views'));
-  app.set('view engine', 'jade');
+// Set routers
+var indexRouter = require("./routes/index");
+var challengeRouter = require("./routes/challenge");
+var userRouter = require("./routes/user");
+var constantRouter = require("./routes/constant");
+var badgeRouter = require("./routes/badge");
+var cloudinaryRouter = require("./routes/cloudinary");
 
-  app.use(logger('dev'));
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: false }));
-  app.use(cookieParser());
-  app.use(express.static(path.join(__dirname, 'public')));
+// view engine setup
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "jade");
 
-  // use cors
-  const cors = require("cors");
-  app.use(
-    cors({
-      origin: "*"
-    }))
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
 
-  // use routes
-  app.use('/', indexRouter);
-  app.use('/challenge', challengeRouter);
-  app.use('/api/user', userRouter);
-  app.use('/constant', constantRouter);
+// use cors
+const cors = require("cors");
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
-  // catch 404 and forward to error handler
-  app.use(function (req, res, next) {
-    next(createError(404));
-  });
+// use routes
+app.use("/", indexRouter);
+app.use("/challenge", challengeRouter);
+app.use("/api/user", userRouter);
+app.use("/constant", constantRouter);
+app.use("/badge", badgeRouter);
+app.use("/cloudinary", cloudinaryRouter);
 
-  // error handler
-  app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  next(createError(404));
+});
 
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-  });
-//});
+// error handler
+app.use(function (err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get("env") === "development" ? err : {};
 
-
+  // render the error page
+  res.status(err.status || 500);
+  res.render("error");
+});
 
 module.exports = app;
