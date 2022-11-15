@@ -32,7 +32,7 @@ const userSchema = new Schema({
   },
   zip: {
     type: String,
-    required: [true, "Please add a "],
+    required: [true, "Please add a zipcode"],
   },
   favorites: {
     type: Array,
@@ -66,6 +66,7 @@ userSchema.statics.signup = async function (
   completed,
   badges
 ) {
+
   // validation: email or password filled
   if (!name || !email || !password || !city || !state || !zip) {
     throw Error("All fields must be filled");
@@ -104,6 +105,7 @@ userSchema.statics.signup = async function (
 
   return user;
 };
+
 
 // static login method
 userSchema.statics.login = async function (email, password) {

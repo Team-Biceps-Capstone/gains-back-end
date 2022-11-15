@@ -13,7 +13,6 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
-
     res.status(200).json({
       _id: user.id,
       name: user.name,
@@ -24,6 +23,7 @@ const loginUser = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 
 // signup a user
 const signupUser = async (req, res) => {
@@ -85,7 +85,6 @@ const viewChallenges = async (req, res) => {
     const displayChallenges2 = await Challenge.getUserDisplayChallenges(
       displayChallenges
     );
-
     res.status(200).send(displayChallenges2);
   } catch (error) {
     res.status(400).json({ error: error.message });

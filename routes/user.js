@@ -19,4 +19,7 @@ router.post("/signup", signupUser);
 //get the view challenges
 router.get("/view", requireAuth, viewChallenges);
 
+//get the view challenges
+router.get('/view', requireAuth, viewChallenges)
+
 module.exports = router;
