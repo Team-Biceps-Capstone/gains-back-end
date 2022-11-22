@@ -73,22 +73,20 @@ const signupUser = async (req, res) => {
 };
 
 //gets you array of inProgress challenges
-const viewChallenges = async (req, res) => {
+const viewProgress = async (req, res) => {
   try {
     var info = JSON.stringify(req.user);
-    var info2 = JSON.parse(info);
+    var infoJson = JSON.parse(info);
 
     //displayChallenges contains array of inProgress from user
-    const displayChallenges = await User.viewChallenges(info2);
+    const displayChallenges = await User.viewChallenges(infoJson);
 
     //Get all challenges from mongoDB and only push values found in user inProgress
-    const displayChallenges2 = await Challenge.getUserDisplayChallenges(
-      displayChallenges
-    );
-    res.status(200).send(displayChallenges2);
+    const displayChallengesFinal = await Challenge.getUserDisplayChallenges(displayChallenges);
+    res.status(200).send(displayChallengesFinal);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-module.exports = { signupUser, loginUser, viewChallenges };
+module.exports = { signupUser, loginUser, viewProgress };

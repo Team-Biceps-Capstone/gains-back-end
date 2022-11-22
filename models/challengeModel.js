@@ -34,6 +34,13 @@ const challengeSchema = new Schema({
     type: String,
     required: [true, "Please add a Badge"],
   },
+  createdBy: {
+    type: String,
+  },
+  favoritedBy: {
+    type: Array,
+    required: [true]
+  }
 });
 
 challengeSchema.statics.createChallenge = async function (
@@ -44,7 +51,9 @@ challengeSchema.statics.createChallenge = async function (
   goals,
   image,
   favorites,
-  badge
+  badge,
+  createdBy,
+  favoritedBy,
 ) {
   if (
     !name ||
@@ -73,12 +82,14 @@ challengeSchema.statics.createChallenge = async function (
     image,
     favorites,
     badge,
+    createdBy,
+    favoritedBy
   });
 
   return challengeObj;
 };
 
-//added by adrian to display users inProgress challenges
+//Display users in inProgress challenges
 challengeSchema.statics.getUserDisplayChallenges = async function (userArray) {
   const filter = {};
   //you get all the challenges
@@ -120,10 +131,34 @@ challengeSchema.statics.getUserDisplayChallenges = async function (userArray) {
   return finalArray;
 };
 
+//Get all the challenges 
 challengeSchema.statics.getDisplayChallenges = async function () {
   const filter = {};
   const all = await this.find(filter);
   return all;
 };
+
+
+//Get the users challenges made by the user
+challengeSchema.statics.getMyChallenges = async function (UserId) {
+  userChallenges = [];
+  const filter = {};
+  const all = await this.find(filter);
+  let challengeLength = Object.keys(all).length;
+
+  //Look through all challenges and only save the ones that match UserID
+  for (let i = 0; i < challengeLength; i++) {
+    let createdByStr = all[i].createdBy;
+    if (createdByStr === UserId){
+      userChallenges.push(all[i])
+    }
+  }
+  return userChallenges;
+};
+
+
+
+
+
 
 module.exports = mongoose.model("Challenge", challengeSchema);
