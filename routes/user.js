@@ -5,7 +5,7 @@ const requireAuth = require("../middleware/requireAuth");
 const {
   loginUser,
   signupUser,
-  viewChallenges,
+  viewProgress,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -17,9 +17,9 @@ router.post("/login", loginUser);
 router.post("/signup", signupUser);
 
 //get the view challenges
-router.get("/view", requireAuth, viewChallenges);
+router.get("/view", requireAuth, viewProgress);
 
 //get the view challenges
-router.get('/view', requireAuth, viewChallenges)
+router.get('/view', requireAuth, viewProgress)
 
 module.exports = router;
