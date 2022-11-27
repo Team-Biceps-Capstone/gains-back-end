@@ -89,4 +89,96 @@ const viewProgress = async (req, res) => {
   }
 };
 
-module.exports = { signupUser, loginUser, viewProgress };
+//add progress to user inProgress
+const addProgress = async (req, res) => {
+  try {
+    var userId = JSON.stringify(req.params.userid);
+    var userIdJson = JSON.parse(userId);
+
+    //displayChallenges contains array of inProgress from user
+    const displayUser = await User.findById(userIdJson);
+
+    if (displayUser.inProgress.includes(req.params.id)){
+      res.status(200).send("Challenge already in progress");
+    } else {
+      displayUser.inProgress.push(req.params.id)
+      displayUser.save()
+      res.status(200).send(displayUser.inProgress);
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+//add progress to user inProgress
+const deleteProgress = async (req, res) => {
+  try {
+    var userId = JSON.stringify(req.params.userid);
+    var userIdJson = JSON.parse(userId);
+
+    //displayChallenges contains array of inProgress from user
+    const displayUser = await User.findById(userIdJson);
+
+    if (displayUser.inProgress.includes(req.params.id)){
+      displayUser.inProgress.remove(req.params.id)
+      displayUser.save()
+      res.status(200).send(displayUser.inProgress);
+    } else {
+      res.status(200).send("challenge already completed");
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+//add completed challenge to complete property for wall of fame
+const addWOF = async (req, res) => {
+  try {
+    var userId = JSON.stringify(req.params.userid);
+    var userIdJson = JSON.parse(userId);
+
+    //displayChallenges contains array of completed from user
+    const displayUser = await User.findById(userIdJson);
+
+    if (displayUser.completed.includes(req.params.id)){
+      res.status(200).send("Challenge already completed");
+    } else {
+      displayUser.completed.push(req.params.id)
+      displayUser.save()
+      res.status(200).send(displayUser.completed);
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+//gets you array of Hall of Fame challenges
+const viewWOF = async (req, res) => {
+  try {
+    var info = JSON.stringify(req.params.userid);
+    var infoJson = JSON.parse(info);
+
+    //UserInfo contains user properties
+    const UserInfo = await User.findById(infoJson);
+
+    let len = Object.keys(UserInfo.completed).length
+    let HOFarray = []
+
+
+    //Get all challenges from mongoDB and only push values found in user completed array
+    for (let i = 0; i < len; i++) {
+    let completedChallenges = await Challenge.findById(UserInfo.completed[i]);
+    HOFarray.push(completedChallenges)
+
+    }
+    res.status(200).send(HOFarray);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
+
+
+
+module.exports = { signupUser, loginUser, viewProgress, addProgress, deleteProgress, addWOF, viewWOF };
