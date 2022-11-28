@@ -189,7 +189,9 @@ const addWOF = async (req, res) => {
 
       for (const [key, value] of Object.entries(counter)) {
         if (value >= 10) {
-          displayUser.badges.push(key);
+          if (!displayUser.badges.includes(key)) {
+            displayUser.badges.push(key);
+          }
         }
       }
 
