@@ -23,9 +23,6 @@ router.post("/signup", signupUser);
 //get the view challenges
 router.get("/view", requireAuth, viewProgress);
 
-//get the view challenges
-router.get('/view', requireAuth, viewProgress)
-
 //put new progress in user's inProgress property
 router.put('/:id/addProgress/:userid', addProgress)
 

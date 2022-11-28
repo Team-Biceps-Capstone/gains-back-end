@@ -1,4 +1,5 @@
 const Badge = require("../models/badgeModel");
+const Challenge = require("../models/challengeModel")
 
 const getBadge = async (req, res) => {
   try {
@@ -10,4 +11,15 @@ const getBadge = async (req, res) => {
   }
 };
 
-module.exports = { getBadge };
+const getBadgeInfo = async (req, res) => {
+  try {
+    
+    const allBadgeInfo = await Badge.getBadge(req.params.name)
+    res.status(200).send(allBadgeInfo);
+    
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = { getBadge, getBadgeInfo };
