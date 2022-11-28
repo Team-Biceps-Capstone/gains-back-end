@@ -169,9 +169,30 @@ const viewWOF = async (req, res) => {
     for (let i = 0; i < len; i++) {
     let completedChallenges = await Challenge.findById(UserInfo.completed[i]);
     HOFarray.push(completedChallenges)
-
     }
     res.status(200).send(HOFarray);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+//remove completed challenge from complete property of wall of fame
+const removeWOF = async (req, res) => {
+  try {
+    var userId = JSON.stringify(req.params.userid);
+    var userIdJson = JSON.parse(userId);
+
+    //displayChallenges contains array of completed from user
+    const displayUser = await User.findById(userIdJson);
+
+    if (displayUser.completed.includes(req.params.id)){
+      displayUser.completed.remove(req.params.id)
+      displayUser.inProgress.push(req.params.id)
+      displayUser.save()
+      res.status(200).send(`${req.params.id} removed from completed property and added back to inProgress`);
+    } else {
+      res.status(200).send("Challenge not found");
+    }
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -181,4 +202,6 @@ const viewWOF = async (req, res) => {
 
 
 
-module.exports = { signupUser, loginUser, viewProgress, addProgress, deleteProgress, addWOF, viewWOF };
+
+
+module.exports = { signupUser, loginUser, viewProgress, addProgress, deleteProgress, addWOF, viewWOF, removeWOF };
