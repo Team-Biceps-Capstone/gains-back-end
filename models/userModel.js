@@ -66,7 +66,6 @@ userSchema.statics.signup = async function (
   completed,
   badges
 ) {
-
   // validation: email or password filled
   if (!name || !email || !password || !city || !state || !zip) {
     throw Error("All fields must be filled");
@@ -106,7 +105,6 @@ userSchema.statics.signup = async function (
   return user;
 };
 
-
 // static login method
 userSchema.statics.login = async function (email, password) {
   // validation: email or password filled
@@ -137,6 +135,12 @@ userSchema.statics.viewChallenges = async function (userID) {
   const all = await this.find(userID);
   const inProgressArray = all[0].inProgress;
   return inProgressArray;
+};
+
+userSchema.statics.viewCompleted = async function (userID) {
+  const all = await this.find(userID);
+  const completedArray = all[0].completed;
+  return completedArray;
 };
 
 module.exports = mongoose.model("User", userSchema);
